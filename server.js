@@ -4,8 +4,8 @@ import cors from 'cors';
 import fileUpload from "express-fileupload";
 import { fileURLToPath } from 'url';
 import { dirname } from "path";
-import userRoutes from './routes/userRoutes.js';
-import authRoutes from './routes/authRoutes.js'
+import userRoutes from './src/routes/userRoutes.js';
+import authRoutes from './src/routes/authRoutes.js'
 
 dotenv.config();
 
@@ -19,6 +19,7 @@ server.use(fileUpload());
 
 server.use(express.static(__dirname+'/public'));
 
+server.use('/', adsRoutes);
 server.use('/', userRoutes);
 server.use('/', authRoutes);
 
