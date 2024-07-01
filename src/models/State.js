@@ -6,19 +6,19 @@ export const createState = async (name) => {
     });
 };
 
-export const findAllStates = async () =>{
+export const findAllStates = async () => {
     return await prisma.state.findMany();
 };
 
-export const findStateById = async (stateId) =>{
+export const findStateById = async (stateId) => {
     return await prisma.state.findUnique({
         where: { id: stateId },
     });
 };
 
-export const updateState = async (id,data) =>{
+export const updateState = async (id, data) => {
     return await prisma.state.update({
-        where:{
+        where: {
             id,
         },
         data: {
@@ -27,17 +27,17 @@ export const updateState = async (id,data) =>{
     });
 };
 
-export const deleteState = async (id) =>{
+export const deleteState = async (id) => {
     return await prisma.state.delete({
-        where:{
+        where: {
             id,
         },
     });
 };
 
-export const findStateByName = async(stateName) =>{
+export const findStateByName = async (stateName) => {
     return await prisma.state.findUnique({
-        where:{
+        where: {
             name: stateName,
         },
     });

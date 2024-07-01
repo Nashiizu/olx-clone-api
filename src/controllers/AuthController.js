@@ -5,11 +5,11 @@ import { createUser } from '../models/User.js';
 import { updateToken, findUserByTokenWithRelations } from '../models/User.js';
 import jwt from 'jsonwebtoken';
 
-export const signup = async (req,res) => {
+export const signup = async (req, res) => {
     try {
         const data = req.body;
         const user = await findUserByEmail(data.email);
-        if(user){
+        if (user) {
             res.status(500).json({
                 error: "Email already exists!",
             });
@@ -18,7 +18,7 @@ export const signup = async (req,res) => {
 
         const passwordHash = await bcrypt.hash(data.password, 10);
         const payload = (Date.now() + Math.random()).toString();
-        const token = await bcrypt.hash(payload,10);
+        const token = await bcrypt.hash(payload, 10);
         const stateId = await findStateByName(data.state);
 
         await createUser({
@@ -26,12 +26,12 @@ export const signup = async (req,res) => {
             email: data.email,
             passwordHash,
             token,
-        },stateId.id);
+        }, stateId.id);
         res.status(201).json({ token });
     } catch (error) {
-     res
-        .status(500)   
-        .json({ error: "Failed to create user", message: error.message });
+        res
+            .status(500)
+            .json({ error: "Failed to create user", message: error.message });
     }
 };
 
@@ -64,11 +64,11 @@ export const signinv2 = async (req, res) => {
 };
 
 
-export const signin = async (req,res) => {
+export const signin = async (req, res) => {
     try {
         const data = req.body;
         const user = await findUserByEmail(data.email);
-        if(!user){
+        if (!user) {
             res.status(500).json({
                 error: "Email or password invalid!",
             });
@@ -76,16 +76,16 @@ export const signin = async (req,res) => {
         }
 
         const match = await bcrypt.compare(data.password, user.passwordHash)
-        if(!match){
+        if (!match) {
             res.status(500).json({
                 error: "Email or password invalid!",
             });
             return;
         }
         const payload = (Date.now() + Math.random()).toString();
-        const token = await bcrypt.hash(payload,10);
+        const token = await bcrypt.hash(payload, 10);
         await updateToken(user.id, token);
-        res.status(200).json({ userId: user.id, token});
+        res.status(200).json({ userId: user.id, token });
 
     } catch (error) {
         res
@@ -94,7 +94,7 @@ export const signin = async (req,res) => {
     }
 };
 
-export const info = async (req,res) => {
+export const info = async (req, res) => {
     try {
         let token = req.body.token;
         const user = await findUserByTokenWithRelations(token);
@@ -108,8 +108,8 @@ export const info = async (req,res) => {
 
     } catch (error) {
         res
-        .status(500)
-        .json({ error: "Failed to get info of the user", message: error.message });
+            .status(500)
+            .json({ error: "Failed to get info of the user", message: error.message });
 
     }
 }

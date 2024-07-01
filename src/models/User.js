@@ -1,14 +1,14 @@
 import { prisma } from "../../config/prisma.js";
 
-export const createUser = async(data, stateId) => {
+export const createUser = async (data, stateId) => {
     return await prisma.user.create({
-        data:{
+        data: {
             name: data.name,
             email: data.email,
             passwordHash: data.passwordHash,
             token: data.token,
-            state:{
-                connect:{
+            state: {
+                connect: {
                     id: stateId,
                 },
             },
@@ -16,34 +16,34 @@ export const createUser = async(data, stateId) => {
     });
 };
 
-export const findUserByEmail = async(email) => {
+export const findUserByEmail = async (email) => {
     return await prisma.user.findUnique({
-        where:{
-            email:email,
+        where: {
+            email: email,
         },
-        include:{
-            state:true,
+        include: {
+            state: true,
         },
-        
+
     });
 };
 
-export const findAllUsers = async() => {
+export const findAllUsers = async () => {
     return await prisma.user.findMany({
         include: { state: true },
     });
 };
 
-export const updateToken = async(userId,token) =>{
+export const updateToken = async (userId, token) => {
     return await prisma.user.update({
-        where: {id:userId},
-        data:{
+        where: { id: userId },
+        data: {
             token,
         }
     });
 };
 
-export const findUserByTokenWithRelations = async(token) => {
+export const findUserByTokenWithRelations = async (token) => {
     return await prisma.user.findFirst({
         where: { token },
         include: {
@@ -53,7 +53,7 @@ export const findUserByTokenWithRelations = async(token) => {
     });
 };
 
-export const findUserByToken = async(token) => {
+export const findUserByToken = async (token) => {
     return await prisma.user.findFirst({
         where: { token },
     });

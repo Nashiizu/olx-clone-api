@@ -1,5 +1,4 @@
-import fileUpload from "express-fileupload";
-import { Prisma, prisma } from "../../config/prisma.js";
+import { prisma } from "../../config/prisma.js"
 
 export const createAd = async (data) => {
     try {
@@ -7,7 +6,7 @@ export const createAd = async (data) => {
             data: {
                 title: data.title,
                 userId: data.userId,
-                categoryId: data.categoryId,
+                categoryId: data.categoryId.id,
                 price: data.price,
                 priceNegotiable: data.priceNegotiable,
                 description: data.description,
@@ -19,7 +18,7 @@ export const createAd = async (data) => {
             }
         });
     } catch (error) {
-        throw new Error(`Failed to create ad: ${error.message}`);
+        throw new Error(`Failed to get ads: ${error.message}`)
     }
 };
 
@@ -56,6 +55,41 @@ export const findAdById = async (id) => {
             include: { images: true },
         });
     } catch (error) {
-        throw new Error(`Failed to get ad by id: ${error.message}`);
+        throw new Error(`Failed to get ads: ${error.message}`)
+    }
+};
+
+export const updateAd = async (id, data) => {
+    try {
+        return await prisma.ads.update({
+            where: { id },
+            data: {
+                title: data.title,
+                userId: data.userId,
+                categoryId: data.categoryId,
+                price: data.price,
+                priceNegotiable: data.priceNegotiable,
+                description: data.description,
+                views: data.views || 0,
+                status: data.status !== undefined ? data.status : true,
+                images: {
+                    create: data.images || [],
+                },
+            },
+        });
+    } catch (error) {
+        throw new Error(`Failed to update ads: ${error.message}`);
+    }
+};
+
+export const deleteAd = async (id) => {
+    try {
+        return await prisma.ads.delete({
+            where: {
+                id,
+            },
+        });
+    } catch (error) {
+        throw new Error(`Failed to delete ads: ${error.message}`);
     }
 };
